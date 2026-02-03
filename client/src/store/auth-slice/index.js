@@ -58,19 +58,28 @@ export const logoutUser = createAsyncThunk(
 export const checkAuth = createAsyncThunk(
   "/auth/checkauth",
 
-  async () => {
-    const response = await axios.get(
-      "http://localhost:5000/api/auth/check-auth",
-      {
-        withCredentials: true,
-        headers: {
-          "Cache-Control":
-            "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
-      }
-    );
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/check-auth",
+        {
+          withCredentials: true,
+          headers: {
+            "Cache-Control":
+              "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+        }
+      );
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      // If user is not logged in (401), treat it as unauthenticated without throwing
+      if (error.response && error.response.status === 401) {
+        return rejectWithValue({ success: false });
+      }
+
+      return rejectWithValue({ success: false });
+    }
   }
 );
 

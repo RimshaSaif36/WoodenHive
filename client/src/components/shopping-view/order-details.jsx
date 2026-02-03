@@ -1,15 +1,28 @@
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { Badge } from "../ui/badge";
-import { DialogContent } from "../ui/dialog";
+import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
 function ShoppingOrderDetailsView({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
 
+  if (!orderDetails) {
+    return null;
+  }
+
+  const safeOrderDate = orderDetails.orderDate
+    ? orderDetails.orderDate.split("T")[0]
+    : "-";
+  const safeUserName = user?.userName || "Guest";
+
   return (
     <DialogContent className="sm:max-w-[600px]">
+      <DialogTitle>Order Details</DialogTitle>
+      <DialogDescription>
+        Summary and shipping information for your order.
+      </DialogDescription>
       <div className="grid gap-6">
         <div className="grid gap-2">
           <div className="flex mt-6 items-center justify-between">
@@ -18,7 +31,7 @@ function ShoppingOrderDetailsView({ orderDetails }) {
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Date</p>
-            <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
+            <Label>{safeOrderDate}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Price</p>
@@ -62,7 +75,10 @@ function ShoppingOrderDetailsView({ orderDetails }) {
             <ul className="grid gap-3">
               {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
                 ? orderDetails?.cartItems.map((item, index) => (
-                    <li key={index} className="flex items-center justify-between">
+                    <li
+                      key={item?.productId || index}
+                      className="flex items-center justify-between"
+                    >
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
                       <span>Price: Rs {item.price}</span>
@@ -76,7 +92,7 @@ function ShoppingOrderDetailsView({ orderDetails }) {
           <div className="grid gap-2">
             <div className="font-medium">Shipping Info</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>{user.userName}</span>
+              <span>{safeUserName}</span>
               <span>{orderDetails?.addressInfo?.address}</span>
               <span>{orderDetails?.addressInfo?.city}</span>
               <span>{orderDetails?.addressInfo?.pincode}</span>
@@ -94,7 +110,10 @@ ShoppingOrderDetailsView.propTypes = {
   orderDetails: PropTypes.shape({
     _id: PropTypes.string,
     orderDate: PropTypes.string,
-    totalAmount: PropTypes.number,
+    totalAmount: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     paymentMethod: PropTypes.string,
     paymentStatus: PropTypes.string,
     paymentId: PropTypes.string,
@@ -103,7 +122,10 @@ ShoppingOrderDetailsView.propTypes = {
       PropTypes.shape({
         title: PropTypes.string,
         quantity: PropTypes.number,
-        price: PropTypes.number,
+        price: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.string,
+        ]),
       })
     ),
     addressInfo: PropTypes.shape({

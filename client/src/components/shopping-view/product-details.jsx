@@ -238,7 +238,7 @@ import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import { getOrCreateGuestId } from "@/lib/utils";
 
-function ProductDetailsDialog({ open, setOpen, productDetails }) {
+function ProductDetailsDialog({ open = false, setOpen = () => {}, productDetails = null }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
 
@@ -298,19 +298,14 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   function handleAddReview() {
-    if (!user?.id) {
-      toast({
-        title: "You need to login to submit a review",
-        variant: "destructive",
-      });
-      return;
-    }
+    const effectiveUserId = user?.id || getOrCreateGuestId();
+    const effectiveUserName = user?.userName || "Guest";
 
     dispatch(
       addReview({
         productId: productDetails?._id,
-        userId: user?.id,
-        userName: user?.userName,
+        userId: effectiveUserId,
+        userName: effectiveUserName,
         reviewMessage: reviewMsg,
         reviewValue: rating,
       })
@@ -455,7 +450,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
 }
 
 export default ProductDetailsDialog;
-
 ProductDetailsDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
@@ -468,10 +462,4 @@ ProductDetailsDialog.propTypes = {
     price: PropTypes.number,
     totalStock: PropTypes.number,
   }),
-};
-
-ProductDetailsDialog.defaultProps = {
-  open: false,
-  setOpen: () => {},
-  productDetails: null,
 };

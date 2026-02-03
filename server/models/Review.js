@@ -7,6 +7,10 @@ const ProductReviewSchema = new mongoose.Schema(
     userName: String,
     reviewMessage: String,
     reviewValue: Number,
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
