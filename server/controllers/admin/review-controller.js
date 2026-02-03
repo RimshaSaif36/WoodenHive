@@ -10,7 +10,7 @@ const getAllReviewsForAdmin = async (req, res) => {
       ...new Set(
         reviews
           .map((item) => item.productId)
-          .filter((id) => typeof id === "string" && id.trim() !== "")
+          .filter((id) => typeof id === "string" && id.trim() !== ""),
       ),
     ];
 
@@ -73,7 +73,7 @@ const updateReviewApprovalStatus = async (req, res) => {
       totalReviewsLength > 0
         ? approvedReviews.reduce(
             (sum, reviewItem) => sum + (reviewItem.reviewValue || 0),
-            0
+            0,
           ) / totalReviewsLength
         : 0;
 
@@ -121,7 +121,7 @@ const deleteReviewForAdmin = async (req, res) => {
       totalReviewsLength > 0
         ? approvedReviews.reduce(
             (sum, reviewItem) => sum + (reviewItem.reviewValue || 0),
-            0
+            0,
           ) / totalReviewsLength
         : 0;
 

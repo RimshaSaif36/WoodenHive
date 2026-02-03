@@ -16,11 +16,11 @@ export const registerUser = createAsyncThunk(
       formData,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return response.data;
-  }
+  },
 );
 
 export const loginUser = createAsyncThunk(
@@ -32,11 +32,11 @@ export const loginUser = createAsyncThunk(
       formData,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return response.data;
-  }
+  },
 );
 
 export const logoutUser = createAsyncThunk(
@@ -48,11 +48,11 @@ export const logoutUser = createAsyncThunk(
       {},
       {
         withCredentials: true,
-      }
+      },
     );
 
     return response.data;
-  }
+  },
 );
 
 export const checkAuth = createAsyncThunk(
@@ -68,7 +68,7 @@ export const checkAuth = createAsyncThunk(
             "Cache-Control":
               "no-store, no-cache, must-revalidate, proxy-revalidate",
           },
-        }
+        },
       );
 
       return response.data;
@@ -80,7 +80,7 @@ export const checkAuth = createAsyncThunk(
 
       return rejectWithValue({ success: false });
     }
-  }
+  },
 );
 
 const authSlice = createSlice({

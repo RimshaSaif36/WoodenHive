@@ -111,7 +111,7 @@ app.use(
       "Pragma",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use(cookieParser());
@@ -136,6 +136,5 @@ app.use("/api/common/feature", commonFeatureRouter);
 
 // -------------------------------
 app.listen(PORT, () =>
-  console.log(`🚀 Server is running on http://localhost:${PORT}`)
+  console.log(`🚀 Server is running on http://localhost:${PORT}`),
 );
-
