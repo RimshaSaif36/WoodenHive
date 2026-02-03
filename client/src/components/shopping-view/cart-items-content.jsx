@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
+import { getOrCreateGuestId } from "@/lib/utils";
 
 function UserCartItemsContent({ cartItem }) {
   const { user } = useSelector((state) => state.auth);
@@ -41,9 +42,11 @@ function UserCartItemsContent({ cartItem }) {
       }
     }
 
+    const userId = user?.id || getOrCreateGuestId();
+
     dispatch(
       updateCartQuantity({
-        userId: user?.id,
+        userId,
         productId: getCartItem?.productId,
         quantity:
           typeOfAction === "plus"
@@ -61,7 +64,10 @@ function UserCartItemsContent({ cartItem }) {
 
   function handleCartItemDelete(getCartItem) {
     dispatch(
-      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
+      deleteCartItem({
+        userId: user?.id || getOrCreateGuestId(),
+        productId: getCartItem?.productId,
+      })
     ).then((data) => {
       if (data?.payload?.success) {
         toast({

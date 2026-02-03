@@ -7,6 +7,7 @@ import { useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { getOrCreateGuestId } from "@/lib/utils";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -18,6 +19,7 @@ function ShoppingCheckout() {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const effectiveUserId = user?.id || getOrCreateGuestId();
 
   console.log(currentSelectedAddress, "cartItems");
 
@@ -66,7 +68,7 @@ function ShoppingCheckout() {
     }
 
     const orderData = {
-      userId: user?.id,
+      userId: effectiveUserId,
       cartId: cartItems?._id,
       cartItems: cartItems.items.map((singleCartItem) => ({
         productId: singleCartItem?.productId,

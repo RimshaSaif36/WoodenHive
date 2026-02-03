@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
+import { getOrCreateGuestId } from "@/lib/utils";
 
 /* ================= HERO IMAGES ================= */
 const heroImages = [
@@ -61,17 +62,17 @@ function ShoppingHome() {
   }
 
   function handleAddtoCart(productId) {
-    if (!user?.id) return;
+    const userId = user?.id || getOrCreateGuestId();
 
     dispatch(
       addToCart({
-        userId: user.id,
+        userId,
         productId,
         quantity: 1,
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        dispatch(fetchCartItems(user.id));
+        dispatch(fetchCartItems(userId));
         toast({ title: "Product is added to cart" });
       }
     });

@@ -7,7 +7,8 @@ function CheckAuth({ isAuthenticated, user, children }) {
 
   if (location.pathname === "/") {
     if (!isAuthenticated) {
-      return <Navigate to="/auth/login" />;
+      // For unauthenticated users, show the shopping home page instead of login
+      return <Navigate to="/shop/home" />;
     } else {
       if (user?.role === "admin") {
         return <Navigate to="/admin/dashboard" />;
@@ -21,7 +22,9 @@ function CheckAuth({ isAuthenticated, user, children }) {
     !isAuthenticated &&
     !(
       location.pathname.includes("/login") ||
-      location.pathname.includes("/register")
+      location.pathname.includes("/register") ||
+      // Allow unauthenticated users to access all shopping pages (guest flow)
+      location.pathname.startsWith("/shop")
     )
   ) {
     return <Navigate to="/auth/login" />;

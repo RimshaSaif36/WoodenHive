@@ -20,6 +20,7 @@ import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { getOrCreateGuestId } from "@/lib/utils";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -104,15 +105,17 @@ function ShoppingListing() {
       }
     }
 
+    const userId = user?.id || getOrCreateGuestId();
+
     dispatch(
       addToCart({
-        userId: user?.id,
+        userId,
         productId: getCurrentProductId,
         quantity: 1,
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        dispatch(fetchCartItems(user?.id));
+        dispatch(fetchCartItems(userId));
         toast({
           title: "Product is added to cart",
         });

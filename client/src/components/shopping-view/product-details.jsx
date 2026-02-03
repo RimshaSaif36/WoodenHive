@@ -236,6 +236,7 @@ import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
+import { getOrCreateGuestId } from "@/lib/utils";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -271,23 +272,17 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       }
     }
 
-    if (!user?.id) {
-      toast({
-        title: "You need to login to add to cart",
-        variant: "destructive",
-      });
-      return;
-    }
+    const userId = user?.id || getOrCreateGuestId();
 
     dispatch(
       addToCart({
-        userId: user.id,
+        userId,
         productId: getCurrentProductId,
         quantity: 1,
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        dispatch(fetchCartItems(user.id));
+        dispatch(fetchCartItems(userId));
         toast({
           title: "Product is added to cart",
         });

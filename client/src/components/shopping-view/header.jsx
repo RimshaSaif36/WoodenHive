@@ -23,6 +23,7 @@ import UserCartWrapper from "./cart-wrapper";
 import { useEffect, useState } from "react";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
+import { getOrCreateGuestId } from "@/lib/utils";
 
 /* ================= MENU ITEMS ================= */
 function MenuItems() {
@@ -82,7 +83,8 @@ function HeaderRightContent() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user?.id) dispatch(fetchCartItems(user.id));
+    const userId = user?.id || getOrCreateGuestId();
+    if (userId) dispatch(fetchCartItems(userId));
   }, [dispatch, user?.id]);
 
   return (
@@ -106,31 +108,46 @@ function HeaderRightContent() {
         />
       </Sheet>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar className="bg-black cursor-pointer">
-            <AvatarFallback className="bg-black text-white font-bold">
-              {user?.userName?.[0]?.toUpperCase() || "U"}
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
+      {user?.id ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="bg-black cursor-pointer">
+              <AvatarFallback className="bg-black text-white font-bold">
+                {user?.userName?.[0]?.toUpperCase() || "U"}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
 
-        <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>
-            Logged in as {user?.userName || "User"}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <UserCog className="mr-2 h-4 w-4" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => dispatch(logoutUser())}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <DropdownMenuContent side="right" className="w-56">
+            <DropdownMenuLabel>
+              Logged in as {user?.userName || "User"}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+              <UserCog className="mr-2 h-4 w-4" />
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => dispatch(logoutUser())}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/auth/login")}
+          >
+            Login
+          </Button>
+          <Button size="sm" onClick={() => navigate("/auth/register")}>
+            Register
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
