@@ -46,7 +46,7 @@ const addToCart = async (req, res) => {
 
     await cart.save();
     console.log("Cart saved successfully:", cart);
-    
+
     res.status(200).json({
       success: true,
       data: cart,

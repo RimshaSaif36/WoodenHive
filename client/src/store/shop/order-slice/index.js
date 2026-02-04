@@ -13,22 +13,22 @@ export const createNewOrder = createAsyncThunk(
   async (orderData) => {
     const response = await axios.post(
       "http://localhost:5000/api/shop/order/create",
-      orderData
+      orderData,
     );
 
     return response.data;
-  }
+  },
 );
 
 export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/list/${userId}`
+      `http://localhost:5000/api/shop/order/list/${userId}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 // Fetch orders for guest users by guest ID and email
@@ -36,22 +36,22 @@ export const getGuestOrdersByIdAndEmail = createAsyncThunk(
   "/order/getGuestOrdersByIdAndEmail",
   async ({ guestId, email }) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/guest/${guestId}/${encodeURIComponent(email)}`
+      `http://localhost:5000/api/shop/order/guest/${guestId}/${encodeURIComponent(email)}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/details/${id}`
+      `http://localhost:5000/api/shop/order/details/${id}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 const shoppingOrderSlice = createSlice({

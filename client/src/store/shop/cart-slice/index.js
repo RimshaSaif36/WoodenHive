@@ -17,7 +17,7 @@ export const addToCart = createAsyncThunk(
           userId,
           productId,
           quantity,
-        }
+        },
       );
       console.log("Cart API response:", response.data);
       return response.data;
@@ -26,29 +26,29 @@ export const addToCart = createAsyncThunk(
       console.error("Error response:", error.response?.data);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/cart/get/${userId}`
+      `http://localhost:5000/api/shop/cart/get/${userId}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
   async ({ userId, productId }) => {
     const response = await axios.delete(
-      `http://localhost:5000/api/shop/cart/${userId}/${productId}`
+      `http://localhost:5000/api/shop/cart/${userId}/${productId}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 export const updateCartQuantity = createAsyncThunk(
@@ -60,11 +60,11 @@ export const updateCartQuantity = createAsyncThunk(
         userId,
         productId,
         quantity,
-      }
+      },
     );
 
     return response.data;
-  }
+  },
 );
 
 const shoppingCartSlice = createSlice({

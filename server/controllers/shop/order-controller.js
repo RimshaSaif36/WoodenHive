@@ -83,7 +83,7 @@ const createOrder = async (req, res) => {
       await sendOrderConfirmationEmail(customerEmail, orderDetails);
       console.log(`Order confirmation email sent to: ${customerEmail}`);
     } catch (emailError) {
-      console.error('Failed to send confirmation email:', emailError);
+      console.error("Failed to send confirmation email:", emailError);
       // Don't fail the order creation if email fails
     }
 
@@ -106,7 +106,7 @@ const getAllOrdersByUser = async (req, res) => {
     const { userId } = req.params;
 
     // Validate that userId is provided and not empty
-    if (!userId || userId.trim() === '') {
+    if (!userId || userId.trim() === "") {
       return res.status(400).json({
         success: false,
         message: "User ID is required",
@@ -114,11 +114,13 @@ const getAllOrdersByUser = async (req, res) => {
     }
 
     // Find orders specifically for this user only
-    const orders = await Order.find({ 
-      userId: userId.trim()  
+    const orders = await Order.find({
+      userId: userId.trim(),
     }).sort({ orderDate: -1 }); // Sort by newest first
 
-    console.log(`Fetching orders for user: ${userId}, found: ${orders.length} orders`);
+    console.log(
+      `Fetching orders for user: ${userId}, found: ${orders.length} orders`,
+    );
 
     res.status(200).json({
       success: true,
@@ -147,23 +149,25 @@ const getGuestOrdersByIdAndEmail = async (req, res) => {
 
     // Build query conditions
     const queryConditions = [];
-    
+
     // Add guest ID condition if provided
-    if (guestId && guestId.trim() !== '') {
+    if (guestId && guestId.trim() !== "") {
       queryConditions.push({ userId: guestId.trim() });
     }
-    
+
     // Add email condition if provided
-    if (email && email.trim() !== '') {
+    if (email && email.trim() !== "") {
       queryConditions.push({ customerEmail: email.trim().toLowerCase() });
     }
 
     // Find orders matching either guest ID or email
     const orders = await Order.find({
-      $or: queryConditions
+      $or: queryConditions,
     }).sort({ orderDate: -1 });
 
-    console.log(`Fetching guest orders for ID: ${guestId}, Email: ${email}, found: ${orders.length} orders`);
+    console.log(
+      `Fetching guest orders for ID: ${guestId}, Email: ${email}, found: ${orders.length} orders`,
+    );
 
     res.status(200).json({
       success: true,

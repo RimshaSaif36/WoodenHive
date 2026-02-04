@@ -18,17 +18,19 @@ const createBrevoTransporter = () => {
 
 // Generate order confirmation email HTML template
 const generateOrderConfirmationHTML = (orderDetails) => {
-  const { 
-    orderId, 
-    cartItems, 
-    addressInfo, 
-    totalAmount, 
-    paymentMethod, 
+  const {
+    orderId,
+    cartItems,
+    addressInfo,
+    totalAmount,
+    paymentMethod,
     orderDate,
-    paymentId 
+    paymentId,
   } = orderDetails;
 
-  const itemsHTML = cartItems.map(item => `
+  const itemsHTML = cartItems
+    .map(
+      (item) => `
     <tr style="border-bottom: 1px solid #eee;">
       <td style="padding: 10px 0;">
         <div style="display: flex; align-items: center; gap: 15px;">
@@ -41,7 +43,9 @@ const generateOrderConfirmationHTML = (orderDetails) => {
       </td>
       <td style="padding: 10px 0; text-align: right; font-weight: 600; color: #8B4513;">Rs ${item.price}</td>
     </tr>
-  `).join('');
+  `,
+    )
+    .join("");
 
   return `
     <!DOCTYPE html>
@@ -78,22 +82,28 @@ const generateOrderConfirmationHTML = (orderDetails) => {
                         </div>
                         <div>
                             <strong>Order Date:</strong><br>
-                            <span style="color: #666;">${new Date(orderDate).toLocaleDateString('en-US', { 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric' 
+                            <span style="color: #666;">${new Date(
+                              orderDate,
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
                             })}</span>
                         </div>
                         <div>
                             <strong>Payment Method:</strong><br>
                             <span style="color: #666;">${paymentMethod}</span>
                         </div>
-                        ${paymentId ? `
+                        ${
+                          paymentId
+                            ? `
                         <div>
                             <strong>Transaction ID:</strong><br>
                             <span style="color: #666;">${paymentId}</span>
                         </div>
-                        ` : ''}
+                        `
+                            : ""
+                        }
                     </div>
                 </div>
                 
@@ -112,7 +122,7 @@ const generateOrderConfirmationHTML = (orderDetails) => {
                         ${addressInfo.address}<br>
                         ${addressInfo.city}, ${addressInfo.pincode}<br>
                         <strong>Phone:</strong> ${addressInfo.phone}<br>
-                        ${addressInfo.notes ? `<strong>Notes:</strong> ${addressInfo.notes}` : ''}
+                        ${addressInfo.notes ? `<strong>Notes:</strong> ${addressInfo.notes}` : ""}
                     </div>
                 </div>
                 
@@ -147,11 +157,11 @@ const generateOrderConfirmationHTML = (orderDetails) => {
 const sendOrderConfirmationEmail = async (customerEmail, orderDetails) => {
   try {
     const transporter = createBrevoTransporter();
-    
+
     const mailOptions = {
       from: {
-        name: 'WoodenHive',
-        address: process.env.BREVO_SENDEREMAIL
+        name: "WoodenHive",
+        address: process.env.BREVO_SENDEREMAIL,
       },
       to: customerEmail,
       subject: `Order Confirmation - #${orderDetails.orderId} | WoodenHive`,
@@ -165,7 +175,7 @@ const sendOrderConfirmationEmail = async (customerEmail, orderDetails) => {
         
         Order Total: Rs ${orderDetails.totalAmount}
         Payment Method: ${orderDetails.paymentMethod}
-        ${orderDetails.paymentId ? `Transaction ID: ${orderDetails.paymentId}` : ''}
+        ${orderDetails.paymentId ? `Transaction ID: ${orderDetails.paymentId}` : ""}
         
         Your order will be processed within 1-2 business days and you'll receive tracking information once shipped.
         
@@ -173,14 +183,17 @@ const sendOrderConfirmationEmail = async (customerEmail, orderDetails) => {
         
         Best regards,
         The WoodenHive Team
-      `
+      `,
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log('Order confirmation email sent successfully:', result.messageId);
+    console.log(
+      "Order confirmation email sent successfully:",
+      result.messageId,
+    );
     return { success: true, messageId: result.messageId };
   } catch (error) {
-    console.error('Error sending order confirmation email:', error);
+    console.error("Error sending order confirmation email:", error);
     return { success: false, error: error.message };
   }
 };
@@ -190,10 +203,10 @@ const testEmailConnection = async () => {
   try {
     const transporter = createBrevoTransporter();
     await transporter.verify();
-    console.log('Email server connection successful');
+    console.log("Email server connection successful");
     return true;
   } catch (error) {
-    console.error('Email server connection failed:', error);
+    console.error("Email server connection failed:", error);
     return false;
   }
 };
@@ -201,5 +214,5 @@ const testEmailConnection = async () => {
 module.exports = {
   sendOrderConfirmationEmail,
   testEmailConnection,
-  generateOrderConfirmationHTML
+  generateOrderConfirmationHTML,
 };
