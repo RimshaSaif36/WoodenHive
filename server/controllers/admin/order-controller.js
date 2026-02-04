@@ -53,7 +53,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { orderStatus } = req.body;
+    const { orderStatus, paymentStatus } = req.body;
 
     const order = await Order.findById(id);
 
@@ -64,11 +64,28 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
-    await Order.findByIdAndUpdate(id, { orderStatus });
+    const updatePayload = {};
+
+    if (typeof orderStatus !== "undefined") {
+      updatePayload.orderStatus = orderStatus;
+    }
+
+    if (typeof paymentStatus !== "undefined") {
+      updatePayload.paymentStatus = paymentStatus;
+    }
+
+    if (Object.keys(updatePayload).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid fields provided to update!",
+      });
+    }
+
+    await Order.findByIdAndUpdate(id, updatePayload);
 
     res.status(200).json({
       success: true,
-      message: "Order status is updated successfully!",
+      message: "Order details are updated successfully!",
     });
   } catch (e) {
     console.log(e);

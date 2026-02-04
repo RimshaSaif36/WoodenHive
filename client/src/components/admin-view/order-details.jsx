@@ -14,7 +14,8 @@ import {
 import { useToast } from "../ui/use-toast";
 
 const initialFormData = {
-  status: "",
+  orderStatus: "",
+  paymentStatus: "",
 };
 
 function AdminOrderDetailsView({ orderDetails }) {
@@ -27,10 +28,14 @@ function AdminOrderDetailsView({ orderDetails }) {
 
   function handleUpdateStatus(event) {
     event.preventDefault();
-    const { status } = formData;
+    const { orderStatus, paymentStatus } = formData;
 
     dispatch(
-      updateOrderStatus({ id: orderDetails?._id, orderStatus: status })
+      updateOrderStatus({
+        id: orderDetails?._id,
+        orderStatus,
+        paymentStatus,
+      })
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(getOrderDetailsForAdmin(orderDetails?._id));
@@ -78,9 +83,9 @@ function AdminOrderDetailsView({ orderDetails }) {
             <Label>
               <Badge
                 className={`py-1 px-3 ${
-                  orderDetails?.orderStatus === "confirmed"
+                  orderDetails?.orderStatus === "delivered"
                     ? "bg-green-500"
-                    : orderDetails?.orderStatus === "rejected"
+                    : orderDetails?.orderStatus === "cancelled"
                     ? "bg-red-600"
                     : "bg-black"
                 }`}
@@ -126,20 +131,30 @@ function AdminOrderDetailsView({ orderDetails }) {
             formControls={[
               {
                 label: "Order Status",
-                name: "status",
+                name: "orderStatus",
                 componentType: "select",
                 options: [
                   { id: "pending", label: "Pending" },
-                  { id: "inProcess", label: "In Process" },
-                  { id: "inShipping", label: "In Shipping" },
+                  { id: "processing", label: "Processing" },
+                  { id: "shipped", label: "Shipped" },
                   { id: "delivered", label: "Delivered" },
-                  { id: "rejected", label: "Rejected" },
+                  { id: "cancelled", label: "Cancelled" },
+                ],
+              },
+              {
+                label: "Payment Status",
+                name: "paymentStatus",
+                componentType: "select",
+                options: [
+                  { id: "pending", label: "Pending" },
+                  { id: "paid", label: "Paid" },
+                  { id: "fail", label: "Fail" },
                 ],
               },
             ]}
             formData={formData}
             setFormData={setFormData}
-            buttonText={"Update Order Status"}
+            buttonText={"Update Order Status & Payment"}
             onSubmit={handleUpdateStatus}
           />
         </div>

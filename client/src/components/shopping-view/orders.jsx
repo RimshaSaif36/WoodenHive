@@ -67,19 +67,19 @@ function ShoppingOrders() {
                 <TableRow key={orderItem?._id}>
                   <TableCell>{orderItem?._id}</TableCell>
                   <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`py-1 px-3 ${
-                        orderItem?.orderStatus === "confirmed"
-                          ? "bg-green-500"
-                          : orderItem?.orderStatus === "rejected"
-                          ? "bg-red-600"
-                          : "bg-black"
-                      }`}
-                    >
-                      {orderItem?.orderStatus}
-                    </Badge>
-                  </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`py-1 px-3 ${
+                          orderItem?.orderStatus === "delivered"
+                            ? "bg-green-500"
+                            : orderItem?.orderStatus === "cancelled"
+                            ? "bg-red-600"
+                            : "bg-black"
+                        }`}
+                      >
+                        {orderItem?.orderStatus}
+                      </Badge>
+                    </TableCell>
                   <TableCell>Rs {orderItem?.totalAmount}</TableCell>
                   <TableCell>
                     <Dialog

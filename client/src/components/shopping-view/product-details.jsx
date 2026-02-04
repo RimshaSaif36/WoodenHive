@@ -315,7 +315,7 @@ function ProductDetailsDialog({ open = false, setOpen = () => {}, productDetails
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
         toast({
-          title: "Review added successfully!",
+          title: "Review submitted successfully! Awaiting admin approval",
         });
       }
     });
