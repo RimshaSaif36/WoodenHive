@@ -85,7 +85,8 @@ function ShoppingListing() {
   }
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
-    console.log(cartItems);
+    console.log("Add to cart clicked for product:", getCurrentProductId);
+    console.log("Current cart items:", cartItems);
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -106,6 +107,7 @@ function ShoppingListing() {
     }
 
     const userId = user?.id || getOrCreateGuestId();
+    console.log("Using userId:", userId);
 
     dispatch(
       addToCart({
@@ -114,12 +116,25 @@ function ShoppingListing() {
         quantity: 1,
       })
     ).then((data) => {
+      console.log("Add to cart response:", data);
       if (data?.payload?.success) {
         dispatch(fetchCartItems(userId));
         toast({
           title: "Product is added to cart",
         });
+      } else {
+        console.error("Failed to add to cart:", data);
+        toast({
+          title: "Failed to add product to cart",
+          variant: "destructive",
+        });
       }
+    }).catch((error) => {
+      console.error("Error adding to cart:", error);
+      toast({
+        title: "Error adding product to cart",
+        variant: "destructive",
+      });
     });
   }
 

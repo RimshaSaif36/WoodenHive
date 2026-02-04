@@ -31,6 +31,18 @@ export const getAllOrdersByUserId = createAsyncThunk(
   }
 );
 
+// Fetch orders for guest users by guest ID and email
+export const getGuestOrdersByIdAndEmail = createAsyncThunk(
+  "/order/getGuestOrdersByIdAndEmail",
+  async ({ guestId, email }) => {
+    const response = await axios.get(
+      `http://localhost:5000/api/shop/order/guest/${guestId}/${encodeURIComponent(email)}`
+    );
+
+    return response.data;
+  }
+);
+
 export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
@@ -71,6 +83,17 @@ const shoppingOrderSlice = createSlice({
         state.orderList = action.payload.data;
       })
       .addCase(getAllOrdersByUserId.rejected, (state) => {
+        state.isLoading = false;
+        state.orderList = [];
+      })
+      .addCase(getGuestOrdersByIdAndEmail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getGuestOrdersByIdAndEmail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.orderList = action.payload.data;
+      })
+      .addCase(getGuestOrdersByIdAndEmail.rejected, (state) => {
         state.isLoading = false;
         state.orderList = [];
       })

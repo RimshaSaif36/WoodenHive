@@ -8,17 +8,24 @@ const initialState = {
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ userId, productId, quantity }) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/shop/cart/add",
-      {
-        userId,
-        productId,
-        quantity,
-      }
-    );
-
-    return response.data;
+  async ({ userId, productId, quantity }, { rejectWithValue }) => {
+    try {
+      console.log("Adding to cart:", { userId, productId, quantity });
+      const response = await axios.post(
+        "http://localhost:5000/api/shop/cart/add",
+        {
+          userId,
+          productId,
+          quantity,
+        }
+      );
+      console.log("Cart API response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Cart API error:", error);
+      console.error("Error response:", error.response?.data);
+      return rejectWithValue(error.response?.data || error.message);
+    }
   }
 );
 
@@ -63,7 +70,11 @@ export const updateCartQuantity = createAsyncThunk(
 const shoppingCartSlice = createSlice({
   name: "shoppingCart",
   initialState,
-  reducers: {},
+  reducers: {
+    clearCart: (state) => {
+      state.cartItems = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addToCart.pending, (state) => {
@@ -113,4 +124,5 @@ const shoppingCartSlice = createSlice({
   },
 });
 
+export const { clearCart } = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;

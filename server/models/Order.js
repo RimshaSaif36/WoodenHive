@@ -20,6 +20,12 @@ const OrderSchema = new mongoose.Schema({
     phone: String,
     notes: String,
   },
+  customerEmail: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
+  },
   orderStatus: String,
   paymentMethod: String,
   paymentStatus: String,

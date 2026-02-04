@@ -4,8 +4,10 @@ const Product = require("../../models/Product");
 const addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
+    console.log("Add to cart request:", { userId, productId, quantity });
 
     if (!userId || !productId || quantity <= 0) {
+      console.log("Invalid data provided:", { userId, productId, quantity });
       return res.status(400).json({
         success: false,
         message: "Invalid data provided!",
@@ -15,6 +17,7 @@ const addToCart = async (req, res) => {
     const product = await Product.findById(productId);
 
     if (!product) {
+      console.log("Product not found:", productId);
       return res.status(404).json({
         success: false,
         message: "Product not found",
@@ -22,9 +25,11 @@ const addToCart = async (req, res) => {
     }
 
     let cart = await Cart.findOne({ userId });
+    console.log("Existing cart:", cart);
 
     if (!cart) {
       cart = new Cart({ userId, items: [] });
+      console.log("Created new cart for user:", userId);
     }
 
     const findCurrentProductIndex = cart.items.findIndex(
@@ -33,17 +38,21 @@ const addToCart = async (req, res) => {
 
     if (findCurrentProductIndex === -1) {
       cart.items.push({ productId, quantity });
+      console.log("Added new item to cart");
     } else {
       cart.items[findCurrentProductIndex].quantity += quantity;
+      console.log("Updated existing item quantity");
     }
 
     await cart.save();
+    console.log("Cart saved successfully:", cart);
+    
     res.status(200).json({
       success: true,
       data: cart,
     });
   } catch (error) {
-    console.log(error);
+    console.log("Cart error:", error);
     res.status(500).json({
       success: false,
       message: "Error",

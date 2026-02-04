@@ -3,11 +3,14 @@ import img from "../../assets/account.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
+import { fetchCartItems, clearCart } from "@/store/shop/cart-slice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { getOrCreateGuestId } from "@/lib/utils";
+import { getOrCreateGuestId, setGuestEmail } from "@/lib/utils";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -16,6 +19,7 @@ function ShoppingCheckout() {
   const [isPaymentStart, setIsPaymemntStart] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("cash-on-delivery");
   const [transactionId, setTransactionId] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const dispatch = useDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -43,6 +47,27 @@ function ShoppingCheckout() {
         variant: "destructive",
       });
 
+      return;
+    }
+
+    // Validate customer email
+    if (!customerEmail || customerEmail.trim() === "") {
+      toast({
+        title: "Email is required",
+        description: "Please enter your email address to receive order confirmation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+      toast({
+        title: "Invalid email format",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -88,6 +113,7 @@ function ShoppingCheckout() {
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
       },
+      customerEmail: customerEmail.trim(),
       orderStatus: "pending",
       paymentMethod:
         paymentMethod === "jazzcash"
@@ -106,8 +132,22 @@ function ShoppingCheckout() {
     dispatch(createNewOrder(orderData)).then((data) => {
       console.log(data, "sangam");
       if (data?.payload?.success) {
+        // Store guest email for future order tracking
+        if (!user) {
+          setGuestEmail(customerEmail);
+        }
+        
+        // Clear cart immediately in frontend state
+        dispatch(clearCart());
+        // Also refresh cart from server to ensure sync
+        dispatch(fetchCartItems(effectiveUserId));
         setIsPaymemntStart(false);
         setTransactionId("");
+        setCustomerEmail("");
+        toast({
+          title: "Order placed successfully!",
+          description: `Order confirmation has been sent to ${customerEmail}`,
+        });
         navigate("/shop/payment-success");
       } else {
         setIsPaymemntStart(false);
@@ -121,10 +161,37 @@ function ShoppingCheckout() {
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
-        <Address
-          selectedId={currentSelectedAddress}
-          setCurrentSelectedAddress={setCurrentSelectedAddress}
-        />
+        <div className="space-y-4">
+          <Address
+            selectedId={currentSelectedAddress}
+            setCurrentSelectedAddress={setCurrentSelectedAddress}
+          />
+          
+          {/* Email Section */}
+          <div className="bg-background p-4 border rounded-lg">
+            <div className="mb-3">
+              <h3 className="text-lg font-medium">Order Confirmation</h3>
+              <p className="text-sm text-muted-foreground">
+                We'll send your order confirmation and tracking details to this email
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="customer-email">Email Address *</Label>
+              <Input
+                id="customer-email"
+                type="email"
+                placeholder="Enter your email address"
+                value={customerEmail}
+                onChange={(e) => setCustomerEmail(e.target.value)}
+                className={`w-full ${customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail) ? 'border-red-500' : ''}`}
+                required
+              />
+              {customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail) && (
+                <p className="text-sm text-red-500">Please enter a valid email address</p>
+              )}
+            </div>
+          </div>
+        </div>
         <div className="flex flex-col gap-4">
           {cartItems && cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((item) => (

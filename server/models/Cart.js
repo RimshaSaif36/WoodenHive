@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const CartSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: mongoose.Schema.Types.Mixed, // Changed to Mixed to handle both ObjectId and String
       required: true,
     },
     items: [

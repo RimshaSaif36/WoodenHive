@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { clearGuestData } from "@/lib/utils";
 
 const initialState = {
   isAuthenticated: false,
@@ -113,6 +114,11 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;
+        
+        // Clear guest data when user logs in successfully
+        if (action.payload.success) {
+          clearGuestData();
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
