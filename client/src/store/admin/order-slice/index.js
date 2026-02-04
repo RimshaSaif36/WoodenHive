@@ -50,6 +50,17 @@ export const updateOrderStatus = createAsyncThunk(
   },
 );
 
+export const deleteOrder = createAsyncThunk(
+  "/order/deleteOrder",
+  async (id) => {
+    const response = await axios.delete(
+      `http://localhost:5000/api/admin/orders/delete/${id}`,
+    );
+
+    return response.data;
+  },
+);
+
 const adminOrderSlice = createSlice({
   name: "adminOrderSlice",
   initialState,
