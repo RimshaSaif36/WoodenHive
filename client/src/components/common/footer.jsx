@@ -17,17 +17,21 @@ function Footer() {
             sourced timber, designed to bring warmth and character to every
             corner of your home.
           </p>
-          <div className="flex flex-wrap gap-3 text-xs text-neutral-300">
-            <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1">
-              100% Quality Checked
-            </span>
-            <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1">
-              Secure Payments
-            </span>
-            <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1">
-              Pan-India Shipping
-            </span>
-          </div>
+          <div className="flex flex-col gap-3 text-xs text-white">
+  <span className="underline underline-offset-4">
+    Quality Tested Products
+  </span>
+
+  <span className="underline underline-offset-4">
+    Secure Payments
+  </span>
+
+  <span className="underline underline-offset-4">
+    Fast & Reliable Delivery
+  </span>
+</div>
+
+
         </div>
 
         {/* Navigation Columns */}
@@ -66,9 +70,8 @@ function Footer() {
               Support
             </p>
             <ul className="space-y-2 text-neutral-300">
-              <li>Phone: +91-99999-99999</li>
-              <li>Email: support@woodenhive.com</li>
-              <li>Mon - Sat, 10:00 AM - 7:00 PM</li>
+              <li>Phone: +923003395535</li>
+              <li>Email: info@woodenhive.com</li>
             </ul>
           </div>
 
@@ -113,8 +116,10 @@ function Footer() {
             <p className="font-medium">Follow WoodenHive</p>
             <div className="flex flex-wrap gap-3">
               {/* TikTok */}
-              <button
-                type="button"
+              <a
+                href="https://www.tiktok.com/@woodenhive?lang=en"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="TikTok"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 transition hover:bg-white hover:text-black"
               >
@@ -126,10 +131,12 @@ function Footer() {
                 >
                   <path d="M15.5 4.5c.5 1.6 1.7 2.8 3.3 3.3v2.2a5.2 5.2 0 0 1-3.3-1.1v5.4A5.4 5.4 0 1 1 10 9.1v2.3a2.9 2.9 0 1 0 2 2.7V4.5h3.5z" />
                 </svg>
-              </button>
+              </a>
               {/* YouTube */}
-              <button
-                type="button"
+              <a
+                href="https://www.youtube.com/@WoodenHive"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="YouTube"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 transition hover:bg-white hover:text-black"
               >
@@ -141,10 +148,12 @@ function Footer() {
                 >
                   <path d="M21 8.3c-.1-.8-.7-1.4-1.4-1.5C18 6.5 15 6.5 12 6.5s-6 0-7.6.3C3.7 7 3.1 7.5 3 8.3 2.8 9.9 2.8 12 3 13.7c.1.8.7 1.4 1.4 1.5 1.6.3 4.6.3 7.6.3s6 0 7.6-.3c.7-.1 1.3-.7 1.4-1.5.2-1.7.2-3.8 0-5.4zM10.5 14V9l4 2.5-4 2.5z" />
                 </svg>
-              </button>
+              </a>
               {/* LinkedIn */}
-              <button
-                type="button"
+              <a
+                href="http://www.linkedin.com/company/wooden-hive/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 transition hover:bg-white hover:text-black"
               >
@@ -156,10 +165,12 @@ function Footer() {
                 >
                   <path d="M5 4.5a1.75 1.75 0 1 1 0 3.5A1.75 1.75 0 0 1 5 4.5zM4 9h2v9H4zM10 9h2v1.2A3.1 3.1 0 0 1 14.5 9C17 9 18 10.6 18 13.1V18h-2v-4.4c0-1.3-.5-2.1-1.6-2.1-1 0-1.6.7-1.6 2V18h-2z" />
                 </svg>
-              </button>
+              </a>
               {/* Instagram */}
-              <button
-                type="button"
+              <a
+                href="https://www.instagram.com/wooden.hive/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 transition hover:bg-white hover:text-black"
               >
@@ -175,10 +186,12 @@ function Footer() {
                   <circle cx="12" cy="12" r="3.2" />
                   <circle cx="17" cy="7" r="1" fill="currentColor" />
                 </svg>
-              </button>
+              </a>
               {/* Facebook */}
-              <button
-                type="button"
+              <a
+                href="https://web.facebook.com/profile.php?id=61587652462421"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Facebook"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 transition hover:bg-white hover:text-black"
               >
@@ -190,7 +203,7 @@ function Footer() {
                 >
                   <path d="M13 10h2.5l.5-3H13V5.5C13 4.7 13.3 4 14.6 4H16V1.2C15.7 1.1 14.8 1 13.8 1 11.4 1 10 2.6 10 5.2V7H7.5v3H10v9h3v-9z" />
                 </svg>
-              </button>
+              </a>
             </div>
           </div>
         </div>
